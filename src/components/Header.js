@@ -44,7 +44,7 @@ export default function Header() {
               <MenuIcon />
             </IconButton>
           </div>
-          <img className="cursor-pointer" src="logo.png" alt="Logo" />
+          <img className="cursor-pointer object-contain h-10 w-auto" src="logo.png" alt="Logo" />
           <div className="text-2xl text-slate-500">Docs</div>
         </div>
         <div className="hidden sm:flex rounded-lg bg-slate-200 w-7/12 py-2 px-5 xl:w-6/12">
@@ -74,7 +74,7 @@ export default function Header() {
           <div className="flex px-2">
             <div className="relative h-50 w-40">
               <img
-                className="border-2 hover:border-blue-500 cursor-pointer"
+                className="border-2 hover:border-blue-500 cursor-pointer object-contain h-50 w-40"
                 src="docs-blank-googlecolors.png"
                 alt=""
                 srcset=""

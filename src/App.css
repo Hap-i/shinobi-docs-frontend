@@ -1,4 +1,18 @@
-*{
-  margin: 0;
-  padding: 0;
+.text-editor-container .ql-editor {
+    width: 816px;
+    height: 1112px;
+    margin-bottom: 2rem;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+    padding: 3rem 4rem;
+    background-color: white;
+}
+.text-editor-container .ql-container {
+    border: none;
+    display: flex;
+    justify-content: center;
+}
+
+.text-editor-container .ql-toolbar {
+    display: flex;
+    justify-content: center;
 }
