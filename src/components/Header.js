@@ -37,17 +37,17 @@ function stringAvatar(name) {
 export default function Header() {
   return (
     <>
-      <div className="flex bg-white justify-between items-center p-2 mr-3">
+      <div className="flex bg-white justify-between items-center p-2 mr-4">
         <div className="flex justify-center items-center">
           <div>
             <IconButton size="large">
               <MenuIcon />
             </IconButton>
           </div>
-          <img className="cursor-pointer" src="logo.png" alt="" />
+          <img className="cursor-pointer" src="logo.png" alt="Logo" />
           <div className="text-2xl text-slate-500">Docs</div>
         </div>
-        <div className="flex rounded-lg bg-slate-200 w-7/12 py-2 px-5 xl:w-6/12">
+        <div className="hidden sm:flex rounded-lg bg-slate-200 w-7/12 py-2 px-5 xl:w-6/12">
           <div className="pr-3">
             <SearchIcon sx={{ color: grey[700] }} />
           </div>
@@ -66,6 +66,24 @@ export default function Header() {
           </div>
         </div>
       </div>
+      <section className="bg-[#F1F3F4]">
+        <div className="max-w-3xl mx-auto pb-5">
+          <div className="px-2 py-4">
+            <h2>Start a new document</h2>
+          </div>
+          <div className="flex px-2">
+            <div className="relative h-50 w-40">
+              <img
+                className="border-2 hover:border-blue-500 cursor-pointer"
+                src="docs-blank-googlecolors.png"
+                alt=""
+                srcset=""
+              />
+              <h3 className="p-2">Blank</h3>
+            </div>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
