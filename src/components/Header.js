@@ -7,6 +7,8 @@ import InputBase from "@mui/material/InputBase";
 import { grey } from "@mui/material/colors";
 import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
 import Avatar from "@mui/material/Avatar";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function stringToColor(string) {
   let hash = 0;
@@ -34,7 +36,25 @@ function stringAvatar(name) {
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
 }
+
+
 export default function Header() {
+  const navigate = useNavigate();
+  function createNewDocument() {
+    axios({
+      url: "http://127.0.0.1:3001/api/v1/document",
+      method: "POST",
+      data: {
+        "data": {}
+      }
+    }).then((res) => {
+      console.log(res.data.data.id)
+      navigate(`/document/${res.data.data.id}`)
+
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
   return (
     <>
       <div className="flex bg-white justify-between items-center p-2 mr-4">
@@ -76,8 +96,8 @@ export default function Header() {
               <img
                 className="border-2 hover:border-blue-500 cursor-pointer object-contain h-50 w-40"
                 src="docs-blank-googlecolors.png"
-                alt=""
-                srcset=""
+                alt="create document"
+                onClick={createNewDocument}
               />
               <h3 className="p-2">Blank</h3>
             </div>

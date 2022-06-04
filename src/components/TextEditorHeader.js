@@ -39,7 +39,7 @@ export default function TextEditorHeader() {
             <img src="/logo.png" alt="logo" />
           </div>
           <div className="pl-3">
-            <div className="text-lg">New Doc</div>
+            <div className="text-lg">New Document</div>
             <div className="flex space-x-4 pt-1">
               <ol>File</ol>
               <ol>Edit</ol>
