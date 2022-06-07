@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+
 
 function Copyright(props) {
     return (
@@ -31,15 +33,33 @@ const theme = createTheme();
 
 export default function SignIn() {
     const navigate = useNavigate();
+    const Login = (email, password) => {
+        axios({
+            url: "http://127.0.0.1:3001/api/v1/user/login",
+            method: "POST",
+            data: {
+                "email": email,
+                "password": password
+
+            },
+            withCredentials: true
+
+        }).then((res) => {
+            console.log(res)
+        }).catch((err) => {
+            console.log(err)
+        })
+    }
+
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-
         console.log({
             email: data.get('email'),
             password: data.get('password'),
         });
+        Login(data.get('email'), data.get('password'));
     };
 
     return (

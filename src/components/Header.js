@@ -9,6 +9,7 @@ import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+// axios.defaults.withCredentials = true;
 
 function stringToColor(string) {
   let hash = 0;
@@ -46,7 +47,8 @@ export default function Header() {
       method: "POST",
       data: {
         "data": {}
-      }
+      },
+      withCredentials: true
     }).then((res) => {
       console.log(res.data.data.id)
       navigate(`/document/${res.data.data.id}`)
