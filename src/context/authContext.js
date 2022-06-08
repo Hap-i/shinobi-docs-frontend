@@ -9,7 +9,7 @@ export function useAuth() {
 
 // logic and wrap children
 export function AuthProvider({ children }) {
-    const [user, setuser] = useState();
+    const [user, setuser] = useState(true);
 
     function setUser(user) {
         setuser(user);

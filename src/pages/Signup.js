@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from '../context/authContext';
 
 function Copyright(props) {
     return (
@@ -32,7 +33,12 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+    const { user } = useAuth()
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) navigate("/")
+    }, []);
     const toastOptions = {
         position: "top-right",
         autoClose: 3000,

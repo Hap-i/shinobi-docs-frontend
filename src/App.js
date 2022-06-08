@@ -4,6 +4,7 @@ import AllDocument from "./pages/AllDocument";
 import TextEditor from "./pages/TextEditor";
 import SignUp from "./pages/Signup";
 import SignIn from "./pages/SignIn";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 function App() {
   return (
     <BrowserRouter>
@@ -11,9 +12,10 @@ function App() {
         <Route
           exact
           path="/"
-          element={<AllDocument />}
+          element={<ProtectedRoute><AllDocument /></ProtectedRoute>}
         ></Route>
-        <Route path="/document/:id" element={<TextEditor />}></Route>
+        <Route path="/document/:id"
+          element={<ProtectedRoute><TextEditor /></ProtectedRoute>}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/signin" element={<SignIn />}></Route>
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { useAuth } from '../context/authContext';
 
 
 function Copyright(props) {
@@ -32,7 +33,13 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+    const { user } = useAuth()
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) navigate("/")
+    }, []);
+
     const Login = (email, password) => {
         axios({
             url: "http://127.0.0.1:3001/api/v1/user/login",
