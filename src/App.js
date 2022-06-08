@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AllDocument from "./pages/AllDocument";
 import TextEditor from "./pages/TextEditor";
 import SignUp from "./pages/Signup";

@@ -38,7 +38,7 @@ export default function SignUp() {
 
     useEffect(() => {
         if (user) navigate("/")
-    }, []);
+    });
     const toastOptions = {
         position: "top-right",
         autoClose: 3000,

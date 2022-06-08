@@ -38,7 +38,7 @@ export default function SignIn() {
 
     useEffect(() => {
         if (user) navigate("/")
-    }, []);
+    });
 
     const Login = (email, password) => {
         axios({
