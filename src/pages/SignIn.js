@@ -33,11 +33,23 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-    const { user } = useAuth()
+    const { user, setuser } = useAuth()
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user) navigate("/")
+        if (!user) {
+            axios({
+                url: "http://127.0.0.1:3001/api/v1/user/me",
+                method: "GET",
+                withCredentials: true
+
+            }).then((res) => {
+                setuser(res.data.data)
+                navigate("/")
+            }).catch((err) => {
+            })
+        }
+        console.log(user);
     });
 
     const Login = (email, password) => {
@@ -50,7 +62,6 @@ export default function SignIn() {
 
             },
             withCredentials: true
-
         }).then((res) => {
             console.log(res)
         }).catch((err) => {

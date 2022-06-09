@@ -12,10 +12,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from '../context/authContext';
+import axios from 'axios';
 
 function Copyright(props) {
     return (
@@ -33,11 +34,24 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-    const { user } = useAuth()
+    const { user, setuser } = useAuth()
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user) navigate("/")
+        if (!user) {
+            axios({
+                url: "http://127.0.0.1:3001/api/v1/user/me",
+                method: "GET",
+                withCredentials: true
+
+            }).then((res) => {
+                setuser(res.data.data)
+                navigate("/")
+            }).catch((err) => {
+            })
+        }
+        console.log(user);
+        // if (user) navigate("/")
     });
     const toastOptions = {
         position: "top-right",
@@ -67,7 +81,10 @@ export default function SignUp() {
             toast.error("Confirm Password is mandatory", toastOptions)
         } else if (userData.password !== userData.confimpassword) {
             toast.error("Password and Confim Password isn't matching", toastOptions)
+        } else {
+            return true;
         }
+        return false;
 
     }
     const handleSubmit = (event) => {

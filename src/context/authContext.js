@@ -9,13 +9,9 @@ export function useAuth() {
 
 // logic and wrap children
 export function AuthProvider({ children }) {
-    const [user, setuser] = useState(true);
-
-    function setUser(user) {
-        setuser(user);
-    }
+    const [user, setuser] = useState();
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, setuser }}>
             {children}
         </AuthContext.Provider>
     )

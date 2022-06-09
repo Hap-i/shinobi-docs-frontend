@@ -1,15 +1,22 @@
+import axios from 'axios'
 import React from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/authContext'
 
 export const ProtectedRoute = ({ children }) => {
-    const { user } = useAuth()
+    const { user, setuser } = useAuth()
     if (!user) {
-        // if user is not there call /me route
-        // and get status code if it is 401 send it to login 
-        // or get user details and store.
-        // try passing setuser
-        return <Navigate to="/signin" />
+        axios({
+            url: "http://127.0.0.1:3001/api/v1/user/me",
+            method: "GET",
+            withCredentials: true
+
+        }).then((res) => {
+            setuser(res.data.data)
+        }).catch((err) => {
+            return <Navigate to="/signin" />
+        })
+
     }
     return children
 }
