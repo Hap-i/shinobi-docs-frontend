@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useAuth } from '../context/authContext';
 
@@ -35,6 +35,8 @@ const theme = createTheme();
 export default function SignIn() {
     const { user, setuser } = useAuth()
     const navigate = useNavigate();
+    const location = useLocation();
+    const redirectPath = location.state?.path || '/'
 
     useEffect(() => {
         if (!user) {
@@ -45,7 +47,7 @@ export default function SignIn() {
 
             }).then((res) => {
                 setuser(res.data.data)
-                navigate("/", { replace: true })
+                navigate(redirectPath, { replace: true })
             }).catch((err) => {
             })
         }

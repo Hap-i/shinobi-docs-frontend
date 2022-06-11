@@ -2,6 +2,7 @@ import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import LockIcon from "@mui/icons-material/Lock";
+import { useNavigate } from "react-router-dom";
 
 function stringToColor(string) {
   let hash = 0;
@@ -31,11 +32,12 @@ function stringAvatar(name) {
 }
 
 export default function TextEditorHeader() {
+  const navigate = useNavigate()
   return (
     <>
       <div className="flex justify-between items-center">
         <div className="flex py-2 px-4">
-          <div>
+          <div className="cursor-pointer" onClick={() => navigate("/")}>
             <img src="/logo.png" alt="logo" />
           </div>
           <div className="pl-3">
