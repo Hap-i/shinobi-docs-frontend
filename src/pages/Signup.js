@@ -52,7 +52,7 @@ export default function SignUp() {
         }
         console.log(user);
         // if (user) navigate("/")
-    });
+    }, []);
     const toastOptions = {
         position: "top-right",
         autoClose: 3000,

@@ -45,12 +45,12 @@ export default function SignIn() {
 
             }).then((res) => {
                 setuser(res.data.data)
-                navigate("/")
+                navigate("/", { replace: true })
             }).catch((err) => {
             })
         }
         console.log(user);
-    });
+    }, []);
 
     const Login = (email, password) => {
         axios({
@@ -63,7 +63,9 @@ export default function SignIn() {
             },
             withCredentials: true
         }).then((res) => {
-            console.log(res)
+            // console.log(res)
+            setuser(res.data.data)
+            navigate("/")
         }).catch((err) => {
             console.log(err)
         })
@@ -139,7 +141,7 @@ export default function SignIn() {
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2" onClick={navigate('/signup')}>
+                                <Link href="#" variant="body2" onClick={() => navigate('/signup')}>
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
