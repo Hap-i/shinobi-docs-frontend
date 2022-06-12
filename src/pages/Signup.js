@@ -66,7 +66,7 @@ export default function SignUp() {
             lastname: data.get('lastName'),
             email: data.get('email'),
             password: data.get('password'),
-            confimpassword: data.get('confimPassword')
+            confirmpassword: data.get('confirmPassword')
         }
 
         if (!userData.firstname) {
@@ -77,9 +77,9 @@ export default function SignUp() {
             toast.error("Email Name is mandatory", toastOptions)
         } else if (!userData.password) {
             toast.error("Password is mandatory", toastOptions)
-        } else if (!userData.confimpassword) {
+        } else if (!userData.confirmpassword) {
             toast.error("Confirm Password is mandatory", toastOptions)
-        } else if (userData.password !== userData.confimpassword) {
+        } else if (userData.password !== userData.confirmpassword) {
             toast.error("Password and Confim Password isn't matching", toastOptions)
         } else {
             return true;
@@ -87,10 +87,43 @@ export default function SignUp() {
         return false;
 
     }
+    const signUp = (data) => {
+        axios({
+            url: "http://127.0.0.1:3001/api/v1/user/signup",
+            method: "POST",
+            data: {
+                "name": data.get('firstName') + " " + data.get('lastName'),
+                "email": data.get('email'),
+                "password": data.get("password"),
+                "passwordConfirm": data.get("confirmPassword")
+            },
+            withCredentials: true
+
+        }).then((res) => {
+            var userObj = {
+                "name": res.data.data.user.name,
+                "email": res.data.data.user.email,
+                "userId": res.data.data.user._id
+            }
+            setuser(userObj)
+            console.log(res)
+            navigate("/")
+        }).catch((err) => {
+            if (err.response.data.message === "Duplicate field value: email. Please use another value!") {
+                toast.error("This Email is already used", toastOptions)
+            } else {
+                toast.error("Something Went wrong! Please try again later.", toastOptions)
+            }
+
+        })
+
+    }
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        validateData(data)
+        if (validateData(data)) {
+            signUp(data)
+        }
     };
 
     return (
@@ -155,10 +188,10 @@ export default function SignUp() {
                                 <TextField
                                     required
                                     fullWidth
-                                    name="confimPassword"
+                                    name="confirmPassword"
                                     label="Confirm Password"
                                     type="password"
-                                    id="confimPassword"
+                                    id="confirmPassword"
                                 />
                             </Grid>
                             <Grid item xs={12}>

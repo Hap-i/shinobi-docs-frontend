@@ -9,7 +9,25 @@ import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
 import Avatar from "@mui/material/Avatar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PersonIcon from "@mui/icons-material/Person";
+import Modal from "@mui/material/Modal";
 // axios.defaults.withCredentials = true;
+
+const style = {
+  position: "absolute",
+  top: "19%",
+  left: "82%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 function stringToColor(string) {
   let hash = 0;
@@ -38,24 +56,41 @@ function stringAvatar(name) {
   };
 }
 
-
 export default function Header() {
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   function createNewDocument() {
     axios({
       url: "http://127.0.0.1:3001/api/v1/document",
       method: "POST",
       data: {
-        "data": {}
+        data: {},
       },
-      withCredentials: true
-    }).then((res) => {
-      console.log(res.data.data.id)
-      navigate(`/document/${res.data.data.id}`)
-
-    }).catch((err) => {
-      console.log(err)
+      withCredentials: true,
     })
+      .then((res) => {
+        console.log(res.data.data.id);
+        navigate(`/document/${res.data.data.id}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleLogout() {
+    axios({
+      url: "http://127.0.0.1:3001/api/v1/user/logout",
+      method: "GET",
+      withCredentials: true,
+    })
+      .then((res) => {
+        navigate(`/signin`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   return (
     <>
@@ -66,7 +101,11 @@ export default function Header() {
               <MenuIcon />
             </IconButton>
           </div>
-          <img className="cursor-pointer object-contain h-10 w-auto" src="logo.png" alt="Logo" />
+          <img
+            className="cursor-pointer object-contain h-10 w-auto"
+            src="logo.png"
+            alt="Logo"
+          />
           <div className="text-2xl text-slate-500">Docs</div>
         </div>
         <div className="hidden sm:flex rounded-lg bg-slate-200 w-7/12 py-2 px-5 xl:w-6/12">
@@ -83,7 +122,7 @@ export default function Header() {
               <AppsRoundedIcon />
             </IconButton>
           </div>
-          <div>
+          <div className="cursor-pointer" onClick={handleOpen}>
             <Avatar {...stringAvatar("Suvendu Sahoo")} />
           </div>
         </div>
@@ -106,6 +145,20 @@ export default function Header() {
           </div>
         </div>
       </section>
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={style} className="space-x-6">
+          <Button variant="contained" startIcon={<PersonIcon />}>
+            My Profile
+          </Button>
+          <Button
+            onClick={handleLogout}
+            variant="contained"
+            startIcon={<LogoutIcon />}
+          >
+            Logout
+          </Button>
+        </Box>
+      </Modal>
     </>
   );
 }

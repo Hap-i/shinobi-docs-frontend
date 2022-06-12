@@ -29,6 +29,7 @@ function App() {
   return (
     <Routes>
       <Route
+        strict
         path="/"
         element={<ProtectedRoute><Homepage /></ProtectedRoute>}
       ></Route>

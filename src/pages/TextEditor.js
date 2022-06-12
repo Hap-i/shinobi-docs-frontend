@@ -4,7 +4,8 @@ import "quill/dist/quill.snow.css";
 import { io } from 'socket.io-client'
 
 import TextEditorHeader from "../components/TextEditorHeader";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 const SAVE_INTERVAL = 2000;
 var toolbarOptions = [
@@ -31,15 +32,24 @@ export default function TextEditor() {
   const [quill, setquill] = useState();
   const wrapperRef = useRef();
   const { id: documentId } = useParams()
+  const navigate = useNavigate()
 
   // connected with socket.io
   useEffect(() => {
-    const s = io("http://127.0.0.1:3001")
-    setsocket(s)
-    console.log("connected to server");
+    axios({
+      url: `http://127.0.0.1:3001/api/v1/user/checkaccess/${documentId}`,
+      method: "GET",
+      withCredentials: true
+    }).then((res) => {
+      const s = io("http://127.0.0.1:3001")
+      setsocket(s)
+      console.log("connected to server");
+    }).catch((err) => {
+      navigate("/")
+    })
     return () => {
       console.log("disconnect")
-      s.disconnect()
+      socket.disconnect()
     }
   }, []);
 
