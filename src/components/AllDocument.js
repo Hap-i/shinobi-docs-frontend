@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import { useAuth } from "../context/authContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 
 export default function AllDocument({ documents }) {
   const [value, setValue] = useState("one");
@@ -81,6 +82,8 @@ export default function AllDocument({ documents }) {
                     alt="Logo"
                   />
                   <h3 className="px-3">{doc.documentId.title}</h3>
+                  {doc.access !== "owner" ? <PeopleOutlineOutlinedIcon color="disabled" /> : <></>}
+
                 </div>
                 <div>
                   <IconButton>
