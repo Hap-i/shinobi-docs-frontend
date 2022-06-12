@@ -30,9 +30,11 @@ var toolbarOptions = [
 export default function TextEditor() {
   const [socket, setsocket] = useState();
   const [quill, setquill] = useState();
+  const [docDetails, setdocDetails] = useState();
   const wrapperRef = useRef();
   const { id: documentId } = useParams()
   const navigate = useNavigate()
+  const [viewOnly, setviewOnly] = useState(true);
 
   // connected with socket.io
   useEffect(() => {
@@ -41,6 +43,13 @@ export default function TextEditor() {
       method: "GET",
       withCredentials: true
     }).then((res) => {
+      setdocDetails({
+        "access": res.data.data.access,
+        "docName": res.data.data.docName
+      })
+      if (res.data.data.access !== "viewer") {
+        setviewOnly(false)
+      }
       const s = io("http://127.0.0.1:3001")
       setsocket(s)
       console.log("connected to server");
@@ -60,7 +69,10 @@ export default function TextEditor() {
     socket.once("load-document", documents => {
       console.log(documents);
       quill.setContents(documents);
-      quill.enable();
+      console.log("viewonly: ", viewOnly)
+      if (viewOnly === false) {
+        quill.enable()
+      }
     })
     //to inform server that we are using this doc
     socket.emit("get-documnet", documentId)
@@ -112,10 +124,13 @@ export default function TextEditor() {
       modules: {
         toolbar: toolbarOptions,
       },
-      theme: "snow",
+      // readOnly: true,
+      theme: "snow"
+
     });
-    // q.disable();
+    q.disable();
     // q.setText("Loading...");
+    // q.editor.enable(false)
     setquill(q);
     return () => {
       wrapperRef.current.innerHTML = "";
@@ -123,7 +138,7 @@ export default function TextEditor() {
   }, []);
   return (
     <>
-      <TextEditorHeader />
+      <TextEditorHeader docDetails={docDetails} />
       <div className="text-editor-container" ref={wrapperRef}></div>
     </>
   );

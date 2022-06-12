@@ -2,7 +2,30 @@ import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import LockIcon from "@mui/icons-material/Lock";
-import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import { useNavigate, useParams } from "react-router-dom";
+import TextField from "@mui/material/TextField";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { useState } from "react";
+import SendIcon from "@mui/icons-material/Send";
+import axios from "axios";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 500,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 
 function stringToColor(string) {
   let hash = 0;
@@ -31,8 +54,44 @@ function stringAvatar(name) {
   };
 }
 
-export default function TextEditorHeader() {
-  const navigate = useNavigate()
+export default function TextEditorHeader({ docDetails }) {
+  const [open, setOpen] = React.useState(false);
+  const [access, setaccess] = React.useState("");
+  const [shareEmail, setshareEmail] = useState("");
+  const navigate = useNavigate();
+  const { id: documentId } = useParams();
+  if (!docDetails) return;
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleAccessType = (event) => {
+    setaccess(event.target.value);
+  };
+  const handleEmail = (event) => {
+    setshareEmail(event.target.value);
+  };
+  const sendDoc = () => {
+    console.log("email: ", shareEmail);
+    console.log("Access: ", access);
+    axios({
+      url: `http://127.0.0.1:3001/api/v1/document/share/${documentId}`,
+      method: "POST",
+      data: {
+        email: shareEmail,
+        access: access,
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        // console.log(res)
+        console.log(res);
+        setaccess("");
+        document.getElementById("filled-basic").value = "";
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <div className="flex justify-between items-center">
@@ -41,7 +100,7 @@ export default function TextEditorHeader() {
             <img src="/logo.png" alt="logo" />
           </div>
           <div className="pl-3">
-            <div className="text-lg">New Document</div>
+            <div className="text-lg">{docDetails.docName}</div>
             <div className="flex space-x-4 pt-1">
               <ol>File</ol>
               <ol>Edit</ol>
@@ -56,6 +115,8 @@ export default function TextEditorHeader() {
               variant="contained"
               size="medium"
               startIcon={<LockIcon fontSize="small" />}
+              onClick={handleOpen}
+              disabled={docDetails.access !== "owner"}
             >
               Share
             </Button>
@@ -66,6 +127,51 @@ export default function TextEditorHeader() {
         </div>
       </div>
       <hr className="border-gray-300" />
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Share `{docDetails.docName}`
+          </Typography>
+          <div className=" flex mt-5 items-center justify-between">
+            <TextField
+              id="filled-basic"
+              sx={{ m: 1, width: "30ch" }}
+              label="Email"
+              variant="standard"
+              onChange={handleEmail}
+            />
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Access
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={access}
+                onChange={handleAccessType}
+                label="access"
+              >
+                <MenuItem value={"editor"}>Editor</MenuItem>
+                <MenuItem value={"viewer"}>Viewer</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <div className="flex justify-end pt-5">
+            <Button
+              variant="contained"
+              endIcon={<SendIcon />}
+              onClick={sendDoc}
+            >
+              Share
+            </Button>
+          </div>
+        </Box>
+      </Modal>
     </>
   );
 }
