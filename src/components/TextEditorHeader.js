@@ -14,6 +14,7 @@ import Select from "@mui/material/Select";
 import { useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
+import EditableLabel from "react-inline-editing";
 
 const style = {
   position: "absolute",
@@ -56,7 +57,7 @@ function stringAvatar(name) {
 
 export default function TextEditorHeader({ docDetails }) {
   const [open, setOpen] = React.useState(false);
-  const [access, setaccess] = React.useState("");
+  const [access, setaccess] = React.useState(""); // for sharing email 
   const [shareEmail, setshareEmail] = useState("");
   const navigate = useNavigate();
   const { id: documentId } = useParams();
@@ -92,6 +93,28 @@ export default function TextEditorHeader({ docDetails }) {
         console.log(err);
       });
   };
+
+  function handleFocusOut(text) {
+    console.log('Left editor with text: ' + text);
+    // console.log(access)
+    axios({
+      url: `http://127.0.0.1:3001/api/v1/document/${documentId}`,
+      method: "PATCH",
+      data: {
+        "name": text
+      },
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res);
+        docDetails.docName = text
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+
+  }
   return (
     <>
       <div className="flex justify-between items-center">
@@ -100,7 +123,19 @@ export default function TextEditorHeader({ docDetails }) {
             <img src="/logo.png" alt="logo" />
           </div>
           <div className="pl-3">
-            <div className="text-lg">{docDetails.docName}</div>
+            <div className="text-lg">
+              {
+                docDetails.access === "owner" ? <EditableLabel text={docDetails.docName}
+                  labelClassName='myLabelClass'
+                  inputClassName='myInputClass'
+                  inputWidth='200px'
+                  inputHeight='25px'
+                  inputMaxLength='50'
+                  inputBorderWidth='1px'
+                  onFocusOut={handleFocusOut}
+                /> : <div>{docDetails.docName}</div>
+              }
+            </div>
             <div className="flex space-x-4 pt-1">
               <ol>File</ol>
               <ol>Edit</ol>
