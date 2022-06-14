@@ -58,6 +58,7 @@ export default function TextEditor() {
     })
     return () => {
       console.log("disconnect")
+      if (socket === undefined) return
       socket.disconnect()
     }
   }, []);
@@ -133,6 +134,7 @@ export default function TextEditor() {
     // q.editor.enable(false)
     setquill(q);
     return () => {
+      if (wrapperRef.current === undefined || wrapperRef.current === null) return
       wrapperRef.current.innerHTML = "";
     };
   }, []);

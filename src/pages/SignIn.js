@@ -37,6 +37,7 @@ export default function SignIn() {
     const navigate = useNavigate();
     const location = useLocation();
     const redirectPath = location.state?.path || '/'
+    console.log("redirect path: ", redirectPath)
 
     useEffect(() => {
         if (!user) {
@@ -50,12 +51,13 @@ export default function SignIn() {
                 navigate(redirectPath, { replace: true })
             }).catch((err) => {
             })
+        } else {
+            navigate(redirectPath, { replace: true })
         }
-        console.log(user);
     }, []);
 
-    const Login = (email, password) => {
-        axios({
+    const Login = async (email, password) => {
+        await axios({
             url: "http://127.0.0.1:3001/api/v1/user/login",
             method: "POST",
             data: {
@@ -67,7 +69,7 @@ export default function SignIn() {
         }).then((res) => {
             // console.log(res)
             setuser(res.data.data)
-            navigate("/")
+            navigate(redirectPath, { replace: true })
         }).catch((err) => {
             console.log(err)
         })

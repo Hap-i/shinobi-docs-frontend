@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import Modal from "@mui/material/Modal";
+import { useAuth } from "../context/authContext";
 // axios.defaults.withCredentials = true;
 
 const style = {
@@ -61,6 +62,7 @@ export default function Header() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
+  const { user, setuser } = useAuth()
   function createNewDocument() {
     axios({
       url: "http://127.0.0.1:3001/api/v1/document",
@@ -86,7 +88,9 @@ export default function Header() {
       withCredentials: true,
     })
       .then((res) => {
-        navigate(`/signin`);
+        console.log("logged out successfully")
+        setuser(undefined)
+        navigate("/signin", { replace: true });
       })
       .catch((err) => {
         console.log(err);

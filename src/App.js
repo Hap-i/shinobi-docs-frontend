@@ -13,19 +13,22 @@ function App() {
   const { user, setuser } = useAuth()
 
   useEffect(() => {
-    if (!user) {
-
-      axios({
+    async function fetchData() {
+      await axios({
         url: "http://127.0.0.1:3001/api/v1/user/me",
         method: "GET",
         withCredentials: true
       }).then(res => {
         setuser(res.data.data)
       }).catch(err => {
-        console.log(err)
+        console.log("I checked first that user is not there")
       })
     }
+    if (!user) {
+      fetchData()
+    }
   }, []);
+
   return (
     <Routes>
       <Route
