@@ -77,7 +77,12 @@ export default function SignIn() {
             withCredentials: true
         }).then((res) => {
             // toast.success(`Welcome back ${res.data.data.user.name.split(" ")[0]}`, toastOptions)
-            setuser(res.data.data)
+            var userObj = {
+                "name": res.data.data.user.name,
+                "email": res.data.data.user.email,
+                "userId": res.data.data.user._id
+            }
+            setuser(userObj)
             navigate(redirectPath, { replace: true })
         }).catch((err) => {
             if (err.response.data.message === "Incorrect Email or Password") {

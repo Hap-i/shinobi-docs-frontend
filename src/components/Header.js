@@ -48,6 +48,7 @@ function stringToColor(string) {
 }
 
 function stringAvatar(name) {
+  console.log("name: ", name);
   return {
     sx: {
       bgcolor: stringToColor(name),
@@ -62,6 +63,8 @@ export default function Header() {
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   const { user, setuser } = useAuth()
+  console.log(user)
+  // if (user.name === undefined || user.name === null) return
   if (!user) return
   function createNewDocument() {
     axios({
@@ -123,7 +126,7 @@ export default function Header() {
             </IconButton>
           </div>
           <div className="cursor-pointer" onClick={handleOpen}>
-            <Avatar {...stringAvatar(user.name.toUpperCase())} />
+            <Avatar {...stringAvatar(user.name !== undefined ? user.name.toUpperCase() : "Shinobi Docs")} />
           </div>
         </div>
       </div>

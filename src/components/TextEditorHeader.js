@@ -65,7 +65,7 @@ export default function TextEditorHeader({ docDetails }) {
   const navigate = useNavigate();
   const { id: documentId } = useParams();
   const { user } = useAuth()
-  if (!user) return
+  if (user.name === undefined || user.name === null) return
 
   if (!docDetails) return;
 
@@ -161,7 +161,7 @@ export default function TextEditorHeader({ docDetails }) {
             </Button>
           </div>
           <div>
-            <Avatar {...stringAvatar(user.name.toUpperCase())} />
+            <Avatar {...stringAvatar(user.name !== undefined ? user.name.toUpperCase() : "Shinobi Docs")} />
           </div>
         </div>
       </div>
