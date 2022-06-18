@@ -15,6 +15,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useAuth } from '../context/authContext';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function Copyright(props) {
@@ -37,12 +39,19 @@ export default function SignIn() {
     const navigate = useNavigate();
     const location = useLocation();
     const redirectPath = location.state?.path || '/'
-    console.log("redirect path: ", redirectPath)
+
+    const toastOptions = {
+        position: "top-right",
+        autoClose: 3000,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+    };
 
     useEffect(() => {
         if (!user) {
             axios({
-                url: "http://127.0.0.1:3001/api/v1/user/me",
+                url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/me`,
                 method: "GET",
                 withCredentials: true
 
@@ -58,7 +67,7 @@ export default function SignIn() {
 
     const Login = async (email, password) => {
         await axios({
-            url: "http://127.0.0.1:3001/api/v1/user/login",
+            url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/login`,
             method: "POST",
             data: {
                 "email": email,
@@ -67,11 +76,15 @@ export default function SignIn() {
             },
             withCredentials: true
         }).then((res) => {
-            // console.log(res)
+            // toast.success(`Welcome back ${res.data.data.user.name.split(" ")[0]}`, toastOptions)
             setuser(res.data.data)
             navigate(redirectPath, { replace: true })
         }).catch((err) => {
-            console.log(err)
+            if (err.response.data.message === "Incorrect Email or Password") {
+                toast.error("Invalid Credential", toastOptions)
+            } else {
+                toast.error("Something Went wrong! Please try again later.", toastOptions)
+            }
         })
     }
 
@@ -79,10 +92,6 @@ export default function SignIn() {
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
         Login(data.get('email'), data.get('password'));
     };
 
@@ -154,6 +163,7 @@ export default function SignIn() {
                 </Box>
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
+            <ToastContainer />
         </ThemeProvider>
     );
 }

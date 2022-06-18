@@ -7,7 +7,7 @@ import TextEditorHeader from "../components/TextEditorHeader";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const SAVE_INTERVAL = 2000;
+// const SAVE_INTERVAL = 2000;
 var toolbarOptions = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ font: [] }],
@@ -35,11 +35,17 @@ export default function TextEditor() {
   const { id: documentId } = useParams()
   const navigate = useNavigate()
   const [viewOnly, setviewOnly] = useState(true);
+  const [shouldSave, setshouldSave] = useState({});
+
+
+  function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
 
   // connected with socket.io
   useEffect(() => {
     axios({
-      url: `http://127.0.0.1:3001/api/v1/user/checkaccess/${documentId}`,
+      url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/checkaccess/${documentId}`,
       method: "GET",
       withCredentials: true
     }).then((res) => {
@@ -50,14 +56,14 @@ export default function TextEditor() {
       if (res.data.data.access !== "viewer") {
         setviewOnly(false)
       }
-      const s = io("http://127.0.0.1:3001")
+      const s = io(`${process.env.REACT_APP_API_BASE_URL}`)
       setsocket(s)
-      console.log("connected to server");
+      // console.log("connected to server");
     }).catch((err) => {
       navigate("/")
     })
     return () => {
-      console.log("disconnect")
+      // console.log("disconnect")
       if (socket === undefined) return
       socket.disconnect()
     }
@@ -68,9 +74,7 @@ export default function TextEditor() {
     if (socket === undefined || quill === undefined) return
     // server sends the doc to load it
     socket.once("load-document", documents => {
-      console.log(documents);
       quill.setContents(documents);
-      console.log("viewonly: ", viewOnly)
       if (viewOnly === false) {
         quill.enable()
       }
@@ -81,15 +85,34 @@ export default function TextEditor() {
   }, [socket, quill, documentId]);
 
   // used to save document
+  // useEffect(() => {
+  //   if (socket === undefined || quill === undefined) return
+  //   const interval = setInterval(() => {
+  //     socket.emit("doc-save", quill.getContents())
+  //   }, SAVE_INTERVAL)
+  //   return () => {
+  //     clearInterval(interval)
+  //   }
+  // }, [socket, quill]);
   useEffect(() => {
-    if (socket === undefined || quill === undefined) return
-    const interval = setInterval(() => {
-      socket.emit("doc-save", quill.getContents())
-    }, SAVE_INTERVAL)
-    return () => {
-      clearInterval(interval)
+    if (socket === undefined || quill === undefined || shouldSave === undefined) return
+    let isCancelled = false;
+    const saveDoc = async () => {
+      document.getElementById("sync-icon").style.display = "block"
+      document.getElementById("sync-done-icon").style.display = "none"
+      await timeout(1000)
+      if (!isCancelled) {
+        socket.emit("doc-save", quill.getContents())
+        document.getElementById("sync-icon").style.display = "none"
+        document.getElementById("sync-done-icon").style.display = "block"
+      }
     }
-  }, [socket, quill]);
+    saveDoc();
+    return () => {
+      isCancelled = true
+    }
+
+  }, [shouldSave]);
 
   // use to receive changes and update content
   useEffect(() => {
@@ -110,6 +133,7 @@ export default function TextEditor() {
     const handler = (delta, oldDelta, source) => {
       if (source !== 'user') return
       socket.emit("send-changes", delta)
+      setshouldSave(delta);
     }
     quill.on("text-change", handler)
     return () => {

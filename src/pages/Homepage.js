@@ -7,26 +7,24 @@ function Homepage() {
     const [documents, setdocuments] = useState();
     useEffect(() => {
         let isCancelled = false;
+        // console.log(process.env.REACT_APP_API_BASE_URL);
         axios({
-            url: "http://127.0.0.1:3001/api/v1/document",
+            url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/document`,
             method: "GET",
             withCredentials: true,
         })
             .then((res) => {
                 if (!isCancelled) {
                     setdocuments(res.data.data.documents)
-                    // console.log(res.data.data.documents);
                 }
             })
             .catch((err) => {
-                console.log(err);
             });
         return () => {
             isCancelled = true;
         };
     }, []);
 
-    // console.log(docs)
     return (
         <>
             <Header />

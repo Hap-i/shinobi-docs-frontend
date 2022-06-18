@@ -15,6 +15,8 @@ import { useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import axios from "axios";
 import EditableLabel from "react-inline-editing";
+import CloudDoneIcon from "@mui/icons-material/CloudDone";
+import CloudSyncIcon from "@mui/icons-material/CloudSync";
 
 const style = {
   position: "absolute",
@@ -57,7 +59,7 @@ function stringAvatar(name) {
 
 export default function TextEditorHeader({ docDetails }) {
   const [open, setOpen] = React.useState(false);
-  const [access, setaccess] = React.useState(""); // for sharing email 
+  const [access, setaccess] = React.useState(""); // for sharing email
   const [shareEmail, setshareEmail] = useState("");
   const navigate = useNavigate();
   const { id: documentId } = useParams();
@@ -72,10 +74,8 @@ export default function TextEditorHeader({ docDetails }) {
     setshareEmail(event.target.value);
   };
   const sendDoc = () => {
-    console.log("email: ", shareEmail);
-    console.log("Access: ", access);
     axios({
-      url: `http://127.0.0.1:3001/api/v1/document/share/${documentId}`,
+      url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/document/share/${documentId}`,
       method: "POST",
       data: {
         email: shareEmail,
@@ -84,36 +84,25 @@ export default function TextEditorHeader({ docDetails }) {
       withCredentials: true,
     })
       .then((res) => {
-        // console.log(res)
-        console.log(res);
         setaccess("");
         document.getElementById("filled-basic").value = "";
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => { });
   };
 
   function handleFocusOut(text) {
-    console.log('Left editor with text: ' + text);
-    // console.log(access)
     axios({
-      url: `http://127.0.0.1:3001/api/v1/document/${documentId}`,
+      url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/document/${documentId}`,
       method: "PATCH",
       data: {
-        "name": text
+        name: text,
       },
       withCredentials: true,
     })
       .then((res) => {
-        console.log(res);
-        docDetails.docName = text
+        docDetails.docName = text;
       })
-      .catch((err) => {
-        console.log(err);
-      });
-
-
+      .catch((err) => { });
   }
   return (
     <>
@@ -123,18 +112,29 @@ export default function TextEditorHeader({ docDetails }) {
             <img src="/logo.png" alt="logo" />
           </div>
           <div className="pl-3">
-            <div className="text-lg">
-              {
-                docDetails.access === "owner" ? <EditableLabel text={docDetails.docName}
-                  labelClassName='myLabelClass'
-                  inputClassName='myInputClass'
-                  inputWidth='200px'
-                  inputHeight='25px'
-                  inputMaxLength='50'
-                  inputBorderWidth='1px'
-                  onFocusOut={handleFocusOut}
-                /> : <div>{docDetails.docName}</div>
-              }
+            <div className="flex items-center">
+              <div className="text-lg">
+                {docDetails.access === "owner" ? (
+                  <EditableLabel
+                    text={docDetails.docName}
+                    labelClassName="myLabelClass"
+                    inputClassName="myInputClass"
+                    inputWidth="200px"
+                    inputHeight="25px"
+                    inputMaxLength={50}
+                    inputBorderWidth="1px"
+                    onFocusOut={handleFocusOut}
+                  />
+                ) : (
+                  <div>{docDetails.docName}</div>
+                )}
+              </div>
+              <div id="sync-icon" className="pl-2 hidden">
+                <CloudSyncIcon color="primary" />
+              </div>
+              <div id="sync-done-icon" className="pl-2">
+                <CloudDoneIcon color="success" />
+              </div>
             </div>
             <div className="flex space-x-4 pt-1">
               <ol>File</ol>

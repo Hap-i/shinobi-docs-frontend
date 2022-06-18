@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
-import { useAuth } from "../context/authContext";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import PeopleOutlineOutlinedIcon from '@mui/icons-material/PeopleOutlineOutlined';
 
@@ -20,18 +18,10 @@ export default function AllDocument({ documents }) {
     }
   }
 
-  // const { user, setuser } = useAuth();
-  // console.log(documents);
-  // documents.map((doc) => {
-  //   console.log(doc);
-  // });
-
   const handleChange = (event, newValue) => {
-    // console.log(newValue);
     setValue(newValue);
   };
   function filterDoc(doc) {
-    // console.log("inside and value is: ", value);
     if (value === "one") {
       return true;
     } else if (value === "two" && doc.access === "owner") {
@@ -44,7 +34,6 @@ export default function AllDocument({ documents }) {
   }
 
   const filteredDocs = documents.filter(filterDoc);
-  // console.log(filteredDocs);
   return (
     <>
       <section>

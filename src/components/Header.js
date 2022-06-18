@@ -11,7 +11,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PersonIcon from "@mui/icons-material/Person";
 import Modal from "@mui/material/Modal";
@@ -62,10 +61,10 @@ export default function Header() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
-  const { user, setuser } = useAuth()
+  const { setuser } = useAuth()
   function createNewDocument() {
     axios({
-      url: "http://127.0.0.1:3001/api/v1/document",
+      url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/document`,
       method: "POST",
       data: {
         data: {},
@@ -73,27 +72,23 @@ export default function Header() {
       withCredentials: true,
     })
       .then((res) => {
-        console.log(res.data.data.id);
         navigate(`/document/${res.data.data.id}`);
       })
       .catch((err) => {
-        console.log(err);
       });
   }
 
   function handleLogout() {
     axios({
-      url: "http://127.0.0.1:3001/api/v1/user/logout",
+      url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/logout`,
       method: "GET",
       withCredentials: true,
     })
       .then((res) => {
-        console.log("logged out successfully")
         setuser(undefined)
         navigate("/signin", { replace: true });
       })
       .catch((err) => {
-        console.log(err);
       });
   }
   return (

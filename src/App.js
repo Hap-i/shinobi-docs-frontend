@@ -5,30 +5,10 @@ import TextEditor from "./pages/TextEditor";
 import SignUp from "./pages/Signup";
 import SignIn from "./pages/SignIn";
 import { ProtectedRoute } from "./components/ProtectedRoute";
-import { useEffect } from "react";
-import axios from "axios";
-import { useAuth } from "./context/authContext";
+// const dotenv = require('dotenv')
+// dotenv.config({ path: './.env.development.local' })
 
 function App() {
-  const { user, setuser } = useAuth()
-
-  useEffect(() => {
-    async function fetchData() {
-      await axios({
-        url: "http://127.0.0.1:3001/api/v1/user/me",
-        method: "GET",
-        withCredentials: true
-      }).then(res => {
-        setuser(res.data.data)
-      }).catch(err => {
-        console.log("I checked first that user is not there")
-      })
-    }
-    if (!user) {
-      fetchData()
-    }
-  }, []);
-
   return (
     <Routes>
       <Route

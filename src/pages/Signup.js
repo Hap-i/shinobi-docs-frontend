@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from '../context/authContext';
@@ -40,7 +40,7 @@ export default function SignUp() {
     useEffect(() => {
         if (!user) {
             axios({
-                url: "http://127.0.0.1:3001/api/v1/user/me",
+                url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/me`,
                 method: "GET",
                 withCredentials: true
 
@@ -50,7 +50,6 @@ export default function SignUp() {
             }).catch((err) => {
             })
         }
-        console.log(user);
         // if (user) navigate("/")
     }, []);
     const toastOptions = {
@@ -89,7 +88,7 @@ export default function SignUp() {
     }
     const signUp = (data) => {
         axios({
-            url: "http://127.0.0.1:3001/api/v1/user/signup",
+            url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/signup`,
             method: "POST",
             data: {
                 "name": data.get('firstName') + " " + data.get('lastName'),
@@ -106,7 +105,6 @@ export default function SignUp() {
                 "userId": res.data.data.user._id
             }
             setuser(userObj)
-            console.log(res)
             navigate("/")
         }).catch((err) => {
             if (err.response.data.message === "Duplicate field value: email. Please use another value!") {
