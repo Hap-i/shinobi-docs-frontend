@@ -17,6 +17,7 @@ import axios from "axios";
 import EditableLabel from "react-inline-editing";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import CloudSyncIcon from "@mui/icons-material/CloudSync";
+import { useAuth } from "../context/authContext";
 
 const style = {
   position: "absolute",
@@ -63,6 +64,8 @@ export default function TextEditorHeader({ docDetails }) {
   const [shareEmail, setshareEmail] = useState("");
   const navigate = useNavigate();
   const { id: documentId } = useParams();
+  const { user } = useAuth()
+
   if (!docDetails) return;
 
   const handleOpen = () => setOpen(true);
@@ -157,7 +160,7 @@ export default function TextEditorHeader({ docDetails }) {
             </Button>
           </div>
           <div>
-            <Avatar {...stringAvatar("Suvendu Sahoo")} />
+            <Avatar {...stringAvatar(user.name)} />
           </div>
         </div>
       </div>
