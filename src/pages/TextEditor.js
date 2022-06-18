@@ -154,8 +154,8 @@ export default function TextEditor() {
 
     });
     q.disable();
-    // q.setText("Loading...");
-    // q.editor.enable(false)
+    q.setText("Loading...");
+    // q.editor.disable()
     setquill(q);
     return () => {
       if (wrapperRef.current === undefined || wrapperRef.current === null) return

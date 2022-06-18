@@ -62,6 +62,7 @@ export default function Header() {
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   const { user, setuser } = useAuth()
+  if (!user) return
   function createNewDocument() {
     axios({
       url: `${process.env.REACT_APP_API_BASE_URL}/api/v1/document`,
@@ -122,7 +123,7 @@ export default function Header() {
             </IconButton>
           </div>
           <div className="cursor-pointer" onClick={handleOpen}>
-            <Avatar {...stringAvatar(user.name)} />
+            <Avatar {...stringAvatar(user.name.toUpperCase())} />
           </div>
         </div>
       </div>

@@ -65,6 +65,7 @@ export default function TextEditorHeader({ docDetails }) {
   const navigate = useNavigate();
   const { id: documentId } = useParams();
   const { user } = useAuth()
+  if (!user) return
 
   if (!docDetails) return;
 
@@ -160,7 +161,7 @@ export default function TextEditorHeader({ docDetails }) {
             </Button>
           </div>
           <div>
-            <Avatar {...stringAvatar(user.name)} />
+            <Avatar {...stringAvatar(user.name.toUpperCase())} />
           </div>
         </div>
       </div>
