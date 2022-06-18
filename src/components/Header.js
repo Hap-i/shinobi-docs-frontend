@@ -48,7 +48,6 @@ function stringToColor(string) {
 }
 
 function stringAvatar(name) {
-  console.log("name: ", name);
   return {
     sx: {
       bgcolor: stringToColor(name),
@@ -63,7 +62,6 @@ export default function Header() {
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   const { user, setuser } = useAuth()
-  console.log(user)
   // if (user.name === undefined || user.name === null) return
   if (!user) return
   function createNewDocument() {
