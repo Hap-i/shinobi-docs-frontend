@@ -18,6 +18,9 @@ import EditableLabel from "react-inline-editing";
 import CloudDoneIcon from "@mui/icons-material/CloudDone";
 import CloudSyncIcon from "@mui/icons-material/CloudSync";
 import { useAuth } from "../context/authContext";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const style = {
   position: "absolute",
@@ -68,6 +71,13 @@ export default function TextEditorHeader({ docDetails }) {
   if (user.name === undefined || user.name === null) return
 
   if (!docDetails) return;
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 3000,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "light",
+  };
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -90,8 +100,17 @@ export default function TextEditorHeader({ docDetails }) {
       .then((res) => {
         setaccess("");
         document.getElementById("filled-basic").value = "";
+        toast.success(`Document shared successfully.`, toastOptions)
       })
-      .catch((err) => { });
+      .catch((err) => {
+        if (err.response.data.message === "User not found. Please invite them") {
+          toast.error(`User not found. Please Enter a Valid Email.`, toastOptions)
+        } else if (err.response.data.message === "Document already shared") {
+          toast.error(`Document already shared with the user.`, toastOptions)
+        } else {
+          toast.error(`Something went wrong !`, toastOptions)
+        }
+      });
   };
 
   function handleFocusOut(text) {
@@ -211,6 +230,7 @@ export default function TextEditorHeader({ docDetails }) {
           </div>
         </Box>
       </Modal>
+      <ToastContainer />
     </>
   );
 }

@@ -76,6 +76,8 @@ export default function SignUp() {
             toast.error("Email Name is mandatory", toastOptions)
         } else if (!userData.password) {
             toast.error("Password is mandatory", toastOptions)
+        } else if (userData.password.length < 8) {
+            toast.error("Password should be atleast of 8 chars.", toastOptions)
         } else if (!userData.confirmpassword) {
             toast.error("Confirm Password is mandatory", toastOptions)
         } else if (userData.password !== userData.confirmpassword) {
@@ -110,6 +112,7 @@ export default function SignUp() {
             if (err.response.data.message === "Duplicate field value: email. Please use another value!") {
                 toast.error("This Email is already used", toastOptions)
             } else {
+                console.log(err)
                 toast.error("Something Went wrong! Please try again later.", toastOptions)
             }
 
